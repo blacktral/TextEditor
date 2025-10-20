@@ -56,11 +56,69 @@ public class Main {
         paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK));
 
 
+
         frame.setJMenuBar(menubar);
 
         JTextPane textPane = new JTextPane();
         JScrollPane scrollPane = new JScrollPane(textPane);
         frame.add(scrollPane, BorderLayout.CENTER);
+
+        JPopupMenu contextMenu = new JPopupMenu();
+
+        JMenuItem copyPopup = new JMenuItem("Копіювати");
+        JMenuItem pastePopup = new JMenuItem("Вставити");
+        JMenuItem cutPopup = new JMenuItem("Вирізати");
+        JMenuItem boldPopup = new JMenuItem("Жирний");
+        JMenuItem italicPopup = new JMenuItem("Курсив");
+        JMenuItem underlinePopup = new JMenuItem("Підкреслений");
+
+        contextMenu.add(copyPopup);
+        contextMenu.add(pastePopup);
+        contextMenu.add(cutPopup);
+        contextMenu.addSeparator();
+        contextMenu.add(boldPopup);
+        contextMenu.add(italicPopup);
+        contextMenu.add(underlinePopup);
+
+// Дії контекстного меню
+        copyPopup.addActionListener(e -> textPane.copy());
+        pastePopup.addActionListener(e -> textPane.paste());
+        cutPopup.addActionListener(e -> textPane.cut());
+
+        boldPopup.addActionListener(e -> {
+            SimpleAttributeSet attrs = new SimpleAttributeSet();
+            StyleConstants.setBold(attrs, true);
+            textPane.setCharacterAttributes(attrs, false);
+        });
+
+        italicPopup.addActionListener(e -> {
+            SimpleAttributeSet attrs = new SimpleAttributeSet();
+            StyleConstants.setItalic(attrs, true);
+            textPane.setCharacterAttributes(attrs, false);
+        });
+
+        underlinePopup.addActionListener(e -> {
+            SimpleAttributeSet attrs = new SimpleAttributeSet();
+            StyleConstants.setUnderline(attrs, true);
+            textPane.setCharacterAttributes(attrs, false);
+        });
+
+// Показ меню при натисканні правої кнопки миші
+        textPane.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
 
         StyledDocument doc = textPane.getStyledDocument();
 
